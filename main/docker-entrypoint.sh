@@ -70,7 +70,6 @@ echo "urlParams['sync'] = 'manual'; //Disable Real-Time" >> $CATALINA_HOME/webap
 
 #Disable unsupported services
 echo "urlParams['db'] = '0'; //dropbox" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
-echo "urlParams['gh'] = '0'; //github" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 echo "urlParams['tr'] = '0'; //trello" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
 
 #Google Drive 
@@ -117,6 +116,20 @@ else
     echo -n "${DRAWIO_GITLAB_URL}/oauth/token" > $CATALINA_HOME/webapps/draw/WEB-INF/gitlab_auth_url
     echo -n "${DRAWIO_GITLAB_ID}" > $CATALINA_HOME/webapps/draw/WEB-INF/gitlab_client_id
     echo -n "${DRAWIO_GITLAB_SECRET}" > $CATALINA_HOME/webapps/draw/WEB-INF/gitlab_client_secret
+fi
+
+#GitHub
+if [[ -z "${DRAWIO_GITLAB_ID}" ]]; then
+    echo "urlParams['gh'] = '0'; //github" >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
+else
+    #GitHub url and id for the editor
+    echo "window.DRAWIO_GITHUB_URL = '${DRAWIO_GITHUB_URL}'; " >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
+    echo "window.DRAWIO_GITLAB_ID = '${DRAWIO_GITLAB_ID}'; " >> $CATALINA_HOME/webapps/draw/js/PreConfig.js
+
+    #GitHub server flow auth
+    echo -n "${DRAWIO_GITHUB_URL}/oauth/token" > $CATALINA_HOME/webapps/draw/WEB-INF/github_auth_url
+    echo -n "${DRAWIO_GITHUB_ID}" > $CATALINA_HOME/webapps/draw/WEB-INF/github_client_id
+    echo -n "${DRAWIO_GITHUB_SECRET}" > $CATALINA_HOME/webapps/draw/WEB-INF/github_client_secret
 fi
 
 cat $CATALINA_HOME/webapps/draw/js/PreConfig.js
